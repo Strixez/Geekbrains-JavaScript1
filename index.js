@@ -1,96 +1,72 @@
-const x_board = ['1', '2', '3', '4', '5', '6', '7', '8'];
-const y_board = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-
-const blackFigures = [
-    { name: 'Тура', char: 'Т', position: 'A1', color: 'black' },
-    { name: 'Слон', char: 'С', position: 'A2', color: 'black' },
-    { name: 'Лошадь', char: 'Л', position: 'A3', color: 'black' },
-    { name: 'Король', char: 'К', position: 'A4', color: 'black' },
-    { name: 'Ферзь', char: 'Ф', position: 'A5', color: 'black' },
-    { name: 'Лошадь', char: 'Л', position: 'A6', color: 'black' },
-    { name: 'Слон', char: 'С', position: 'A7', color: 'black' },
-    { name: 'Тура', char: 'Т', position: 'A8', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B1', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B2', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B3', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B4', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B5', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B6', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B7', color: 'black' },
-    { name: 'пешка', char: 'п', position: 'B8', color: 'black' },
-];
-
-const whiteFigures = [
-    { name: 'Тура', char: 'Т', position: 'H1', color: 'white' },
-    { name: 'Слон', char: 'С', position: 'H2', color: 'white' },
-    { name: 'Лошадь', char: 'Л', position: 'H3', color: 'white' },
-    { name: 'Король', char: 'К', position: 'H4', color: 'white' },
-    { name: 'Ферзь', char: 'Ф', position: 'H5', color: 'white' },
-    { name: 'Лошадь', char: 'Л', position: 'H6', color: 'white' },
-    { name: 'Слон', char: 'С', position: 'H7', color: 'white' },
-    { name: 'Тура', char: 'Т', position: 'H8', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G1', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G2', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G3', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G4', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G5', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G6', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G7', color: 'white' },
-    { name: 'пешка', char: 'п', position: 'G8', color: 'white' },
-];
-
-const chess = {
-    boardId: 0,
-    boardHTML: "",
-    figures: [],
-
-    createBoard: function (id, x, y) {
-        this.boardId = id;
-        this.boardHTML = document.createElement('table');
-        this.boardHTML.className = "board";
-        for (let iy = 0; iy <= y.length + 1; iy++) {
-            let row = document.createElement("tr");
-            this.boardHTML.appendChild(row);
-            for (let ix = 0; ix <= x.length + 1; ix++) {
-                let cell = document.createElement("td");
-                if (iy == 0 && ix == 0 || iy == 0 && ix > x.length || iy > y.length && ix == 0 || iy > y.length && ix > x.length) {
-                    cell.className = "head-xy";
-                } else if (iy == 0 || iy > y.length) {
-                    cell.className = "head-x";
-                    cell.innerHTML = x[ix - 1];
-                } else if (ix == 0 || ix > x.length) {
-                    cell.className = "head-y";
-                    cell.innerHTML = y[iy - 1];
-                } else if ((ix + iy) % 2 == 0) {
-                    cell.className = "black";
-                    cell.id = id + '@' + y[iy - 1] + x[ix - 1];
-                } else {
-                    cell.className = "white";
-                    cell.id = id + '@' + y[iy - 1] + x[ix - 1];
-                }
-                row.appendChild(cell);
-            }
-        }
-        return this;
-    },
-    initFigures: function (figuresSet) {
-        this.figures = figuresSet;
-        for (let ii = 0; ii < figuresSet.length; ii++) {
-            let cell = document.getElementById(this.boardId + '@' + this.figures[ii].position);
-            let fig = document.createElement("div");
-            fig.innerHTML = this.figures[ii].char;
-            fig.className = 'fig f-' + this.figures[ii].color;
-            cell.appendChild(fig);
-        }
-    }
+var d = document,
+    itemBox = d.querySelectorAll('.item_box'), // блок каждого товара
+    cartCont = d.getElementById('cart_content'); // блок вывода данных корзины
+// Функция кроссбраузерной установка обработчика событий
+function addEvent(elem, type, handler){
+  if(elem.addEventListener){
+    elem.addEventListener(type, handler, false);
+  } else {
+    elem.attachEvent('on'+type, function(){ handler.call( elem ); });
+  }
+  return false;
 }
-
-window.onload = function () {
-    // задание 1
-    document.getElementById("board-1").appendChild(chess.createBoard('1', x_board, y_board).boardHTML);
-
-    // задание 2
-    let boardDiv2 = document.getElementById("board-2");
-    let board2 = chess.createBoard('2', x_board, y_board);
-    boardDiv2.appendChild(board2.boardHTML);
-    board2.initFigures(whiteFigures.concat(blackFigures));
+// Получаем данные из LocalStorage
+function getCartData(){
+  return JSON.parse(localStorage.getItem('cart'));
+}
+// Записываем данные в LocalStorage
+function setCartData(o){
+  localStorage.setItem('cart', JSON.stringify(o));
+  return false;
+}
+// Добавляем товар в корзину
+function addToCart(e){
+  this.disabled = true; // блокируем кнопку на время операции с корзиной
+  var cartData = getCartData() || {}, // получаем данные корзины или создаём новый объект, если данных еще нет
+      parentBox = this.parentNode, // родительский элемент кнопки "Добавить в корзину"
+      itemId = this.getAttribute('data-id'), // ID товара
+      itemTitle = parentBox.querySelector('.item_title').innerHTML, // название товара
+      itemPrice = parentBox.querySelector('.item_price').innerHTML; // стоимость товара
+  if(cartData.hasOwnProperty(itemId)){ // если такой товар уже в корзине, то добавляем +1 к его количеству
+    cartData[itemId][2] += 1;
+  } else { // если товара в корзине еще нет, то добавляем в объект
+    cartData[itemId] = [itemTitle, itemPrice, 1];
+  }
+  if(!setCartData(cartData)){ // Обновляем данные в LocalStorage
+    this.disabled = false; // разблокируем кнопку после обновления LS
+  }
+ return false;
+}
+// Устанавливаем обработчик события на каждую кнопку "Добавить в корзину"
+for(var i = 0; i < itemBox.length; i++){
+  addEvent(itemBox[i].querySelector('.add_item'), 'click', addToCart);
+}
+// Открываем корзину со списком добавленных товаров
+function openCart(e){
+  var cartData = getCartData(), // вытаскиваем все данные корзины
+      totalItems = '';
+  // если что-то в корзине уже есть, начинаем формировать данные для вывода
+  if(cartData !== null){
+    totalItems = '<table class="shopping_list"><tr><th>Наименование</th><th>Цена</th><th>Кол-во</th></tr>';
+    for(var items in cartData){
+      totalItems += '<tr>';
+      for(var i = 0; i < cartData[items].length; i++){
+        totalItems += '<td>' + cartData[items][i] + '</td>';
+      }
+      totalItems += '</tr>';
+    }
+    totalItems += '</table>';
+    cartCont.innerHTML = totalItems;
+  } else {
+    // если в корзине пусто, то сигнализируем об этом
+    cartCont.innerHTML = 'В корзине пусто!';
+  }
+  return false;
+}
+/* Открыть корзину */
+addEvent(d.getElementById('checkout'), 'click', openCart);
+/* Очистить корзину */
+addEvent(d.getElementById('clear_cart'), 'click', function(e){
+  localStorage.removeItem('cart');
+  cartCont.innerHTML = 'Корзина очишена.';
+});
